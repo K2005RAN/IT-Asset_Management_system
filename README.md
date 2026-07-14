@@ -428,9 +428,13 @@ raik182005@gmail.com
 <div align="center">
 
 ### ⭐ If you found this project useful, consider giving it a Star on GitHub!
+<div align="center">
 
-Made with ❤️ using the MERN Stack BY <a href="www.linkedin.com/in/karan-rai-a961aa292
+### ⭐ If you found this project useful, consider giving it a Star!
 
-"> <p> KARAN RAI</p></a>
+Made with ❤️ using the MERN Stack by <a href="https://www.linkedin.com/in/karan-rai-a961aa292" target="_blank"><strong>Karan Rai</strong></a>
+
+</div>
+
 
 </div>
