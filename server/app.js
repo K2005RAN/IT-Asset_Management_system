@@ -40,12 +40,10 @@ const allowedOrigins = [
   "http://localhost:3001", 
   "http://localhost:5173",
   "http://localhost:5000",
-  ...frontendOrigins,
-  "https://it-asset-management-system.vercel.app",
-  "https://it-asset-management-system-three.vercel.app",
-  "https://it-asset-management-system-hatkqyjzp-my2026team.vercel.app",
-  "https://it-asset-management-system-deebia06j-my2026team.vercel.app"
+  ...frontendOrigins
 ].filter(Boolean);
+
+const vercelOriginPattern = /^https:\/\/[A-Za-z0-9-]+\.vercel\.app$/;
 
 app.use(
   cors({
@@ -53,14 +51,14 @@ app.use(
       if (!origin || origin === 'null' || origin === 'undefined') {
         return callback(null, true);
       }
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      const normalizedOrigin = origin.trim();
+      if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || vercelOriginPattern.test(normalizedOrigin)) {
         return callback(null, true);
-      } else {
-        const msg = `The CORS policy for this site does not allow access from origin: ${origin}`;
-        return callback(new Error(msg), false);
       }
+      const msg = `The CORS policy for this site does not allow access from origin: ${normalizedOrigin}`;
+      return callback(new Error(msg), false);
     },
-    credentials: true
+    credentials: true,
   })
 );
 
