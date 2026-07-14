@@ -1,20 +1,54 @@
 const mongoose = require('mongoose');
 
 const RepairLogSchema = new mongoose.Schema({
-    assetId: { type: String, required: true },
-    hardwareModelNo: { type: String, default: '' },
-    serviceTag: { type: String, default: '' },
-    plant: { type: String, default: 'Narsinghgarh' },
+    assetId: { 
+        type: String, 
+        required: true 
+    },
+    hardwareModelNo: { 
+        type: String, 
+        default: '' 
+    },
+    serviceTag: { 
+        type: String, 
+        default: '' 
+    },
+    plant: { 
+        type: String, 
+        default: 'Narsinghgarh' 
+    },
     
     // Vendor Assignment Parameters
-    vendorName: { type: String, required: true },
-    expectedReturnDate: { type: Date, default: null },
-    expectedPrice: { type: Number, default: 0 },
+    vendorName: { 
+        type: String, 
+        required: true 
+    },
+    expectedReturnDate: { 
+        type: Date, 
+        default: null 
+    },
+    expectedPrice: { 
+        type: Number, 
+        default: 0 
+    },
     
     // Repair Lifecycle Timestamps
-    sentToRepairAt: { type: Date, default: Date.now },
-    restoredToStockAt: { type: Date, default: null },
-    status: { type: String, enum: ['In Repair', 'Completed'], default: 'In Repair' }
-}, { timestamps: true });
+    sentToRepairAt: { 
+        type: Date, 
+        default: Date.now 
+    },
+    restoredToStockAt: { 
+        type: Date, 
+        default: null 
+    },
+    status: { 
+        type: String, 
+        enum: ['In Repair', 'Completed'], 
+        default: 'In Repair' 
+    }
+}, { 
+    timestamps: true // Automatically manages createdAt and updatedAt tracking milestones
+});
 
+// CRITICAL FIX: Explicitly compiling and exporting the schema object as a valid Mongoose model
 module.exports = mongoose.model('RepairLog', RepairLogSchema);
