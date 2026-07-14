@@ -26,7 +26,7 @@ const CreateUser = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/users', formData);
+            const response = await axios.post('/api/users', formData);
             if (response.status === 201) {
                 alert('User account created successfully!');
                 navigate('/user-management');

@@ -24,7 +24,7 @@ const EmployeeDashboard = () => {
             const token = localStorage.getItem('token');
 
             // 1. Fetch employee profile
-            const userResponse = await fetch(`http://localhost:5000/api/users?email=${encodeURIComponent(email)}`, {
+            const userResponse = await fetch(`/api/users?email=${encodeURIComponent(email)}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,7 +54,7 @@ const EmployeeDashboard = () => {
 
                 // 2. Fetch assigned assets
                 if (empId !== 'N/A') {
-                    const assetsResponse = await fetch(`http://localhost:5000/api/assignments?userId=${encodeURIComponent(empId)}`, {
+                    const assetsResponse = await fetch(`/api/assignments?userId=${encodeURIComponent(empId)}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",

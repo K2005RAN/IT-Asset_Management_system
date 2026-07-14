@@ -176,7 +176,7 @@ const AssignedAssets = () => {
 
     const fetchInitialData = async () => {
         try {
-            const deptsRes = await axios.get('http://localhost:5000/api/admin/assets-search');
+            const deptsRes = await axios.get('/api/admin/assets-search');
             if (deptsRes.data && Array.isArray(deptsRes.data)) {
                 const clearSectorsList = [...new Set(deptsRes.data.map(a => a.department).filter(Boolean))];
                 setDepartments(clearSectorsList.length > 0 ? clearSectorsList : ["IT Department", "Mining Logistics", "Human Resources", "Operations Sector"]);
@@ -184,12 +184,12 @@ const AssignedAssets = () => {
         } catch (error) { console.error('❌ Failed to load departments:', error); }
 
         try {
-            const assetsRes = await axios.get('http://localhost:5000/api/admin/assets-search');
+            const assetsRes = await axios.get('/api/admin/assets-search');
             if (assetsRes.data) setAssets(assetsRes.data);
         } catch (error) { console.error('❌ Failed to load assets:', error); }
 
         try {
-            const assignmentsRes = await axios.get('http://localhost:5000/api/assignments');
+            const assignmentsRes = await axios.get('/api/assignments');
             if (assignmentsRes.data) {
                 setAssignedAssets(assignmentsRes.data);
                 setFilteredAssignments(assignmentsRes.data);
@@ -199,7 +199,7 @@ const AssignedAssets = () => {
 
     const fetchEmployeesByDepartment = async (deptName) => {
         try {
-            const response = await axios.get('http://localhost:5000/api/admin/employees');
+            const response = await axios.get('/api/admin/employees');
             if (response.data && Array.isArray(response.data)) {
                 const sectorMatches = response.data.filter(emp => emp.department && emp.department.toLowerCase().trim() === deptName.toLowerCase().trim());
                 setFilteredEmployees(sectorMatches);
@@ -230,7 +230,7 @@ const AssignedAssets = () => {
 
         try {
             const payload = { userId: finalUserId, assetId, assignmentDate, serviceRequestNo: serviceRequestNo.trim() };
-            await axios.post('http://localhost:5000/api/assignments', payload);
+            await axios.post('/api/assignments', payload);
             setModalOpen(false);
             resetForm();
             fetchInitialData();
@@ -261,7 +261,7 @@ const AssignedAssets = () => {
 
         if (window.confirm('Are you sure you want to permanently clear this allocation record?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/assignments/${id}`);
+                await axios.delete(`/api/assignments/${id}`);
                 setAssignedAssets(prev => prev.filter(a => a._id !== id));
                 fetchInitialData();
             } catch (error) { console.error('❌ Error deleting assignment:', error); }

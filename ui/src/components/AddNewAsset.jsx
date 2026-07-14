@@ -95,7 +95,7 @@ const AddNewAsset = () => {
                 assetId: indexKeyFallback
             };
 
-            const response = await axios.post('http://localhost:5000/api/assets', productionReadyPayload);
+            const response = await axios.post('/api/assets', productionReadyPayload);
 
             if (response.status === 200 || response.status === 201) {
                 alert('Pristine Document Registry Safe: Asset created and synchronized inside Atlas server layers.');

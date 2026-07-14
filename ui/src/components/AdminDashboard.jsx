@@ -57,9 +57,9 @@ const AdminDashboard = () => {
         
         try {
             const [assetsRes, assignmentsRes, staffRes] = await Promise.allSettled([
-                axios.get('http://localhost:5000/api/admin/assets-search'), 
-                axios.get('http://localhost:5000/api/assignments'),
-                axios.get('http://localhost:5000/api/admin/employees')
+                axios.get('/api/admin/assets-search'), 
+                axios.get('/api/assignments'),
+                axios.get('/api/admin/employees')
             ]);
 
             const assetsData = assetsRes.status === 'fulfilled' && Array.isArray(assetsRes.value.data) ? assetsRes.value.data : [];
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
                 Object.entries(updatedFilters).filter(([_, value]) => String(value).trim() !== "")
             );
             const queryString = new URLSearchParams(activeFilters).toString();
-            const res = await axios.get(`http://localhost:5000/api/admin/assets-search?${queryString}`);
+            const res = await axios.get(`/api/admin/assets-search?${queryString}`);
             setAssets(res.data);
             setHasActiveFilter(true);
         } catch (err) {
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:5000/api/assets/${id}`);
+            const response = await axios.delete(`/api/assets/${id}`);
             if (response.status === 200 || response.data.success) {
                 alert("Asset successfully flushed from ecosystem.");
                 setAssets(prev => prev.filter(item => item._id !== id));
@@ -183,7 +183,7 @@ const AdminDashboard = () => {
                 const multipartFormData = new FormData();
                 multipartFormData.append('file', fileSelected);
 
-                const res = await axios.post("http://localhost:5000/api/assets/upload-csv", multipartFormData, {
+                const res = await axios.post("/api/assets/upload-csv", multipartFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
@@ -242,7 +242,7 @@ const AdminDashboard = () => {
     const downloadFullMasterDatabase = async () => {
         try {
             setRefreshing(true);
-            const response = await axios.get('http://localhost:5000/api/admin/assets-search');
+            const response = await axios.get('/api/admin/assets-search');
             if (response.data && Array.isArray(response.data)) {
                 executeCSVDownloadPipeline(response.data, "Full_Master_IT_Asset_Database.csv");
             }
@@ -545,7 +545,7 @@ const AdminDashboard = () => {
                                                                                 if (asset.assetStatus === 'Maintenance') {
                                                                                     if (window.confirm(`Are you sure you want to change [${assetLabel}] status to Normal? This commits completion timestamps to log collections.`)) {
                                                                                         try {
-                                                                                            const res = await axios.put(`http://localhost:5000/api/assets/${asset._id}/return-from-repair`);
+                                                                                            const res = await axios.put(`/api/assets/${asset._id}/return-from-repair`);
                                                                                             if (res.data.success) {
                                                                                                 alert("Lifecycle complete: Asset restored to normal stock pool.");
                                                                                                 handleResetAndReloadTable();
@@ -710,7 +710,7 @@ const AdminDashboard = () => {
                                 onClick={async () => {
                                     if (!repairForm.vendorName.trim()) { alert("Validation Missing: You must input a vendor name."); return; }
                                     try {
-                                        const res = await axios.post(`http://localhost:5000/api/assets/${repairModal.assetId}/send-to-repair`, repairForm);
+                                        const res = await axios.post(`/api/assets/${repairModal.assetId}/send-to-repair`, repairForm);
                                         if (res.data.success) {
                                             alert("Asset routed into tracking schema history rows successfully.");
                                             setRepairModal({ show: false, assetId: null, label: "" });

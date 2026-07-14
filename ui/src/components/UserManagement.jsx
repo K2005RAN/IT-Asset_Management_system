@@ -35,7 +35,7 @@ const UserManagement = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:5000/api/admin/employees');
+            const response = await axios.get('/api/admin/employees');
             if (response.data && Array.isArray(response.data)) {
                 setUsers(response.data);
                 setFilteredUsers(response.data);
@@ -65,7 +65,7 @@ const UserManagement = () => {
                 const multipartFormData = new FormData();
                 multipartFormData.append('file', selectedFile);
 
-                const res = await axios.post("http://localhost:5000/api/admin/upload-employees-csv", multipartFormData, {
+                const res = await axios.post("/api/admin/upload-employees-csv", multipartFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
@@ -90,7 +90,7 @@ const UserManagement = () => {
     const handleDeleteUser = async (userId) => {
         if (window.confirm('Are you sure you want to delete this user profile?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/users/${userId}`);
+                await axios.delete(`/api/users/${userId}`);
                 setUsers(users.filter(user => user.userId !== userId));
                 setFilteredUsers(filteredUsers.filter(user => user.userId !== userId));
             } catch (error) {

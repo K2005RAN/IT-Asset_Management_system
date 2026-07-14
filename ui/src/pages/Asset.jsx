@@ -15,8 +15,8 @@ const Asset = () => {
       
       // 🌟 DUAL SYNC FETCH: Pulls both assets and real assignment entries to eliminate metric mismatches
       const [assetsRes, assignmentsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/assets-search'),
-        axios.get('http://localhost:5000/api/assignments')
+        axios.get('/api/admin/assets-search'),
+        axios.get('/api/assignments')
       ]);
 
       if (assetsRes.data && Array.isArray(assetsRes.data)) {

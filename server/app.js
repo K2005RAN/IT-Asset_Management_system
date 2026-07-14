@@ -35,8 +35,10 @@ const allowedOrigins = [
   "http://localhost:3000", 
   "http://localhost:3001", 
   "http://localhost:5173",
-  "http://localhost:5000"
-];
+  "http://localhost:5000",
+  process.env.FRONTEND_URL,
+  "https://it-asset-management-system.vercel.app"
+].filter(Boolean);
 
 app.use(
   cors({
@@ -975,7 +977,7 @@ if (!process.env.MONGO_URI) {
 }
 
 // Connect to MongoDB with explicit error handling
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Database Connected Successfully to MongoDB");
         app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

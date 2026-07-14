@@ -15,7 +15,7 @@ const RepairHistory = () => {
 
     const fetchRepairLogs = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/admin/repair-history');
+            const res = await axios.get('/api/admin/repair-history');
             setHistory(Array.isArray(res.data) ? res.data : []);
         } catch (err) {
             console.error("Failed to query maintenance ledger tracks:", err);
@@ -56,7 +56,7 @@ const RepairHistory = () => {
     const saveRowUpdate = async (id) => {
         setActionLoading(true);
         try {
-            await axios.put(`http://localhost:5000/api/admin/repair-history/${id}`, editForm);
+            await axios.put(`/api/admin/repair-history/${id}`, editForm);
             
             // Optimistically update the UI state locally
             setHistory(prev => prev.map(log => 
