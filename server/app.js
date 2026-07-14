@@ -20,7 +20,7 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // --- Schema References ---
-const RepairLog = require('./models/repairModel'); 
+const RepairLog = require('./models/repairModel'); //  CORRECT 
 const User = require('./models/User'); 
 const Assignment = require('./models/Assignment');
 const AdminUser = require("./models/AdminUser");
@@ -191,6 +191,7 @@ app.put('/api/assets/:id/return-from-repair', async (req, res) => {
  * GET /api/admin/repair-history
  * 🔍 REPAIR HISTORY QUERY: Fetches comprehensive repair tracking tickets for the portal view
  */
+// 1. GET: Fetch the complete workshop history tracking ledger
 app.get('/api/admin/repair-history', async (req, res) => {
     try {
         const historyLogs = await RepairLog.find({}).sort({ sentToRepairAt: -1 }).lean();
@@ -198,6 +199,48 @@ app.get('/api/admin/repair-history', async (req, res) => {
     } catch (error) {
         console.error("❌ Failed to aggregate workshop records:", error);
         return res.status(500).json({ error: "Failed to extract database tracking histories." });
+    }
+});
+
+// 2. PUT: Update vendor allocation and financial cost bounds inline
+app.put('/api/admin/repair-history/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { vendorName, expectedPrice } = req.body;
+
+        // Form Validation Rules
+        if (!vendorName || vendorName.trim() === "") {
+            return res.status(400).json({ message: "Vendor target allocation cannot be empty." });
+        }
+
+        if (expectedPrice === undefined || expectedPrice === null || isNaN(expectedPrice)) {
+            return res.status(400).json({ message: "Financial cost bounds must be a valid number." });
+        }
+
+        // Execute atomic document update context inside MongoDB
+        const updatedLog = await RepairLog.findByIdAndUpdate(
+            id,
+            { 
+                $set: { 
+                    vendorName: vendorName.trim(), 
+                    expectedPrice: Number(expectedPrice) 
+                } 
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedLog) {
+            return res.status(404).json({ message: "Maintenance log item tracking profile not found." });
+        }
+
+        return res.status(200).json({ 
+            message: "Ledger track metrics updated successfully.", 
+            data: updatedLog 
+        });
+
+    } catch (err) {
+        console.error("❌ Database inline edit transaction failed:", err);
+        return res.status(500).json({ error: "Internal transaction engine processing error." });
     }
 });
 
@@ -923,16 +966,42 @@ app.use("/api", require("./routes/AdminUsers"));
 app.use('/api', require('./routes/assignmentRoutes'));
 
 const PORT = process.env.PORT || 5000;
-mongoose.connect(process.env.MONGO_URI);
-const database = mongoose.connection;
 
-database.once("connected", () => {
-    console.log("Database Connected Successfully to MongoDB compass!");
+// Basic environment validation to help diagnose deployment issues quickly
+if (!process.env.MONGO_URI) {
+    console.error("FATAL: Missing MONGO_URI environment variable. Set MONGO_URI to your MongoDB connection string.");
+    console.error("Example: mongodb+srv://<user>:<password>@cluster0.mongodb.net/mydb?retryWrites=true&w=majority");
+    process.exit(1);
+}
+
+// Connect to MongoDB with explicit error handling
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("Database Connected Successfully to MongoDB");
+        app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+    })
+    .catch((connErr) => {
+        console.error("FATAL: Unable to connect to MongoDB:", connErr.message || connErr);
+        // Log full error to console for hosting logs
+        console.error(connErr);
+        process.exit(1);
+    });
+
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err);
+});
+
+// Global handlers to surface uncaught errors in logs (helps platforms like Render/Vercel)
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+    process.exit(1);
 });
 
 app.use((err, req, res, next) => {
     console.error("💥 Unhandled Express Pipeline Exception: ", err);
     res.status(500).json({ error: "Internal core ecosystem handshake failure." });
 });
-
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
