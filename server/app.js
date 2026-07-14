@@ -31,15 +31,20 @@ app.use(express.json());
 app.use(cookieParser());
 
 // --- CORS Configuration ---
+const frontendOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(origin => origin.trim()).filter(Boolean)
+  : [];
+
 const allowedOrigins = [
   "http://localhost:3000", 
   "http://localhost:3001", 
   "http://localhost:5173",
   "http://localhost:5000",
-  process.env.FRONTEND_URL,
+  ...frontendOrigins,
   "https://it-asset-management-system.vercel.app",
   "https://it-asset-management-system-three.vercel.app",
-  "https://it-asset-management-system-hatkqyjzp-my2026team.vercel.app"
+  "https://it-asset-management-system-hatkqyjzp-my2026team.vercel.app",
+  "https://it-asset-management-system-deebia06j-my2026team.vercel.app"
 ].filter(Boolean);
 
 app.use(
