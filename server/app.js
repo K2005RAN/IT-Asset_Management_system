@@ -38,7 +38,8 @@ const allowedOrigins = [
   "http://localhost:5000",
   process.env.FRONTEND_URL,
   "https://it-asset-management-system.vercel.app",
-  "https://it-asset-management-system-three.vercel.app"
+  "https://it-asset-management-system-three.vercel.app",
+  "https://it-asset-management-system-hatkqyjzp-my2026team.vercel.app"
 ].filter(Boolean);
 
 app.use(
