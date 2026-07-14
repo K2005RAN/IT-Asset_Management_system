@@ -431,6 +431,6 @@ raik182005@gmail.com
 
 Made with ❤️ using the MERN Stack BY <a href="www.linkedin.com/in/karan-rai-a961aa292
 
-"<p> KARAN RAI</p></a>
+"> <p> KARAN RAI</p></a>
 
 </div>
