@@ -430,8 +430,6 @@ raik182005@gmail.com
 ### ⭐ If you found this project useful, consider giving it a Star on GitHub!
 <div align="center">
 
-### ⭐ If you found this project useful, consider giving it a Star!
-
 Made with ❤️ using the MERN Stack by <a href="https://www.linkedin.com/in/karan-rai-a961aa292" target="_blank"><strong>Karan Rai</strong></a>
 
 </div>
